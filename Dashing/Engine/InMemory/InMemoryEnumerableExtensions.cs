@@ -47,7 +47,10 @@
                     var childColumn = node.Value.Column.ChildColumn;
                     var param = Expression.Parameter(childColumn.Map.Type);
                     var whereClause = Expression.Lambda(
-                        Expression.Equal(Expression.Property(Expression.Property(param, childColumn.Name), node.Value.Column.Map.PrimaryKey.Name), Expression.Constant(node.Value.Column.Map.GetPrimaryKeyValue(entity))),
+                        Expression.AndAlso(
+                            Expression.NotEqual(Expression.Property(param, childColumn.Name), Expression.Constant(null)),
+                            Expression.Equal(Expression.Property(Expression.Property(param, childColumn.Name), node.Value.Column.Map.PrimaryKey.Name), Expression.Constant(node.Value.Column.Map.GetPrimaryKeyValue(entity)))
+                            ),
                         param).Compile();
                     var tableType = childColumn.Map.Type;
                     var table = tables[tableType];

@@ -37,6 +37,13 @@
         }
 
         [Fact]
+        public void CollectionWithNullableProperty() {
+            var session = this.GetSession();
+            var posts = session.Query<Blog>().Fetch(b => b.Posts).ToArray();
+            Assert.Single(posts);
+        }
+
+        [Fact]
         public void WhereNotFetchedWorks() {
             var session = this.GetSession();
             var comments = session.Query<Comment>().Fetch(c => c.Post).Where(c => c.Post.Author.UserId == 1);
